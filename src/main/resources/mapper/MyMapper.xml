@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lishoupeng.mapper.MyMapper">
+	
+	<select id="getList" resultType="com.lishoupeng.pojo.Goods">
+		select * from
+		(select g.id,g.name,g.sname,g.size,g.price,g.inp,b.name as bname,gs.name as type from tb_goods g 
+		LEFT JOIN tb_brand b on b.id=g.tid 
+		LEFT JOIN tb_goodskind gs on g.bid=gs.id where inp=0)r
+		<where>
+			<if test="key!=null and key!=''">
+				and name like '%${key}%'
+			</if>
+		</where>
+	</select>
+	
+	<update id="del">
+		update tb_goods set inp=1 where id in (${id})
+	</update>
+	
+	<select id="getGoods" resultType="com.lishoupeng.pojo.Goods">
+		select * from tb_goods g LEFT JOIN tb_brand b on b.id=g.tid 
+		LEFT JOIN tb_goodskind gs on g.bid=gs.id where id = #{id}
+	</select>
+	
+	<insert id="add">
+		insert into tb_goods(name,sname,size,price,num) values(#{name},#{sname},#{size},#{price},#{num})
+	</insert>
+</mapper>
